@@ -2,15 +2,29 @@ pipeline {
     agent any
 
     stages {
+
         stage('Checkout') {
             steps {
-                echo 'Checking out source code...'
+                checkout scm
             }
         }
 
-        stage('Build') {
+        stage('Build Docker Image') {
             steps {
-                echo 'Building application...'
+                sh 'sudo docker build -t ci-cd-demo .'
+            }
+        }
+
+        stage('Stop Old Container') {
+            steps {
+                sh 'sudo docker stop website || true'
+                sh 'sudo docker rm website || true'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh 'sudo docker run -d --name website -p 80:80 ci-cd-demo'
             }
         }
     }
