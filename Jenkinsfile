@@ -11,20 +11,20 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'sudo docker build -t ci-cd-demo .'
+                sh 'docker build -t ci-cd-demo .'
             }
         }
 
         stage('Stop Old Container') {
             steps {
-                sh 'sudo docker stop website || true'
-                sh 'sudo docker rm website || true'
+                sh 'docker stop website || true'
+                sh 'docker rm website || true'
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy Website') {
             steps {
-                sh 'sudo docker run -d --name website -p 80:80 ci-cd-demo'
+                sh 'docker run -d --name website -p 80:80 ci-cd-demo'
             }
         }
     }
